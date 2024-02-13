@@ -7,7 +7,7 @@
 
 <div class="text-center">
     <button>Create New Sequence</button>
-    <h1 class="display-4">Sequences on Home</h1>
+    <h1 class="display-4">Sequences</h1>
 
 
 
@@ -34,7 +34,7 @@
             <tbody>
                 @foreach (var sequence in Model.Sequences)
                 {
-                    <a asp-controller="Sequence" asp-action="Detail" asp-route-id="@sequence.Id">c</a>
+                    <a asp-controller="Sequence" asp-action="Detail" asp-route-id="@sequence.Id">
                         <tr>
                             <td>
                                 @string.Join(", ", sequence.Integers.Select(x => x.Value))
@@ -46,7 +46,7 @@
                                 @sequence.SortingTime
                             </td>
                         </tr>
-                    
+                    </a>
                 }
             </tbody>
         </table>

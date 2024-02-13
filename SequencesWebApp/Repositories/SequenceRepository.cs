@@ -28,9 +28,9 @@ namespace SequencesWebApp.Repositories
             return await _context.Sequences.Include(s => s.Integers).ToListAsync();
         }
 
-        public Task<Sequence> GetByIdAsync(int id)
+        public async Task<Sequence> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Sequences.Include(s => s.Integers).SingleOrDefaultAsync(s => s.Id == id);
         }
 
         public bool Save()
