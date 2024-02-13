@@ -14,16 +14,32 @@
     }
     else
     {
-        @foreach(var sequence in Model.Sequences)
-        {
-            <p>Sequence</p>
-            <ul>
-                @foreach(var item in sequence.Integers)
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Integers</th>
+                    <th scope="col">Order</th>
+                    <th scope="col">Sorting Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sequence in Model.Sequences)
                 {
-                    <li>@item.Value</li>
+                    <tr>
+                        <td>
+                            @string.Join(", ", sequence.Integers.Select(x => x.Value))
+                        </td>
+                        <td>
+                            @(sequence.IsAscending ? "Ascending" : "Descending")
+                        </td>
+                        <td>
+                            @sequence.SortingTime
+                        </td>
+                    </tr>
                 }
-            </ul>
-        }
+            </tbody>
+        </table>
+
     }
 
 </div>
