@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SequencesWebApp", "SequencesWebApp\SequencesWebApp.csproj", "{BD221322-D93B-4C52-8F2A-A6B467E0584D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD221322-D93B-4C52-8F2A-A6B467E0584D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD221322-D93B-4C52-8F2A-A6B467E0584D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD221322-D93B-4C52-8F2A-A6B467E0584D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD221322-D93B-4C52-8F2A-A6B467E0584D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7F46C15-B142-4FD5-BA78-41B0E589F516}
+	EndGlobalSection
+EndGlobal
