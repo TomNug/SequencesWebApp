@@ -1,6 +1,7 @@
 using ListsWebApp.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SequencesWebApp.Interfaces;
 using SequencesWebApp.Models;
 using SequencesWebApp.ViewModels;
 using System.Diagnostics;
@@ -10,18 +11,20 @@ namespace SequencesWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context;
+        private readonly ISequenceRepository _sequenceRepository;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ISequenceRepository sequenceRespository)
         {
             _logger = logger;
-            _context = context;
+            _sequenceRepository = sequenceRespository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             // Check if null
-            var sequences = _context.Sequences.Include(s => s.Integers).ToList();
+            var sequences = await _sequenceRepository.GetAllAsync(); 
+                
+
             // Could sequences be null
             HomeViewModel homeViewModel = new HomeViewModel()
             {

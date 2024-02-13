@@ -1,10 +1,13 @@
 using ListsWebApp.Data;
 using Microsoft.EntityFrameworkCore;
+using SequencesWebApp.Interfaces;
+using SequencesWebApp.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ISequenceRepository, SequenceRepository>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
