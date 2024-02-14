@@ -2,6 +2,7 @@
 using SequencesWebApp.Interfaces;
 using SequencesWebApp.Models;
 using SequencesWebApp.ViewModels;
+using System.Net;
 
 namespace SequencesWebApp.Controllers
 {
@@ -52,9 +53,30 @@ namespace SequencesWebApp.Controllers
         public IActionResult Create([FromBody] SequenceCreateViewModel sequenceCreateViewModel)
         {
             List<int> ints = sequenceCreateViewModel.Sequence;
-            //bool ascending = sequenceCreateViewModel.IsAscending;
-            //float timeTaken = sequenceCreateViewModel.SortingTime;
-            return Ok();
+            bool ascending = sequenceCreateViewModel.IsAscending;
+            float timeTaken = sequenceCreateViewModel.SortingTime;
+
+            List<SequenceInt> integerList = new List<SequenceInt>();
+            foreach(int integer in ints)
+            {
+                SequenceInt sequenceInt = new SequenceInt()
+                {
+                    Value = integer,
+                };
+                integerList.Add(sequenceInt);
+            }
+
+
+
+            var sequence = new Sequence()
+            {
+                IsAscending = ascending,
+                SortingTime = timeTaken,
+                Integers = integerList
+            };
+
+            _sequenceRepository.Add(sequence);
+            return RedirectToAction("Index");
         }
     }
 }

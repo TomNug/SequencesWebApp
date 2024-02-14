@@ -15,7 +15,8 @@ namespace SequencesWebApp.Repositories
 
         public bool Add(Sequence sequence)
         {
-            throw new NotImplementedException();
+            _context.Add(sequence);
+            return Save();
         }
 
         public bool Delete(Sequence sequence)
