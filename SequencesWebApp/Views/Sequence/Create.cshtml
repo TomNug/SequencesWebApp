@@ -4,8 +4,6 @@
 *@
 @{
 }
-
-
 <h1>Creating the Sequence</h1>
 <form method="post" id="integerForm">
     <div id="integerInputs" class="mb-2">
@@ -13,10 +11,8 @@
         <button type="button" onclick="addInteger()">Add</button>
     </div>
     
-
-    
-    <div id="badgeContainer">
-    <!-- Tiles will be appended here -->
+    <div id="numberButtonContainer">
+    <!-- Number buttons are added here -->
 </div>
 
     <h1>Sorting Options</h1>
@@ -30,51 +26,30 @@
     <h1>Sequence</h1>
     <p id="showSequence"> </p>
 
-    <button type="button" class="btn btn-secondary" id="saveButton">Save Sequence</button>
+    <button type="button" class="btn btn-secondary" id="saveButton" onclick="save()">Save Sequence</button>
 </form>
 
 <script>
-    // Big sequence, for testing purposes
-    let sequence = [];
-    // let sequence = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-    //     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-    //     41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-    //     61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
-    //     81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
-    //     101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
-    //     121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140,
-    //     141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160,
-    //     161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180,
-    //     181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-    //     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-    //     41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-    //     61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
-    //     81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
-    //     101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
-    //     121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140,
-    //     141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160,
-    //     161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180,
-    //     181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200];
-
-    
+    let numCount = 0;
+    let sequenceIsSorted = false;
+    let sequenceIsAscending = true;
+    let timeTaken = 0;
 
     // Identify the sorting buttons
     const sortAscendingButton = document.getElementById("sortAscendingButton");
     const sortDescendingButton = document.getElementById("sortDescendingButton");
     neutraliseSortState();
 
-
-    // Sorts on click
+    // Sorts on click - ASCENDING
     sortAscendingButton.addEventListener("click", function() {
         // Sort in ascending order
-        if (sequence.length > 0) {
+        if (numCount > 0) {
             // Make selected button green
             sortAscendingButton.classList.add("btn-success");
             sortDescendingButton.classList.remove("btn-success");
+            sequenceIsSorted = true;
+            sequenceIsAscending = true;
             sortBadges(true);
-            //sort(true);
-            //reRenderBadges();
         }
         else{
             // Reset colours
@@ -83,14 +58,15 @@
         }
     });
 
-    // Sorts on click
+    // Sorts on click - DESCENDING
     sortDescendingButton.addEventListener("click", function () {
         // Sort in descending order
-        if (sequence.length > 0) {
+        if (numCount > 0) {
             // Make selected button green
             sortAscendingButton.classList.remove("btn-success");
             sortDescendingButton.classList.add("btn-success");
-            //sort(false);
+            sequenceIsSorted = true;
+            sequenceIsAscending = false;
             sortBadges(false);
         }
         else {
@@ -100,13 +76,58 @@
     });
 
     function neutraliseSortState() {
+
+        // Reset sorting button colours
         sortAscendingButton.classList.remove("btn-success");
         sortDescendingButton.classList.remove("btn-success");
-        let showTimeTaken = document.getElementById("timeTaken");
-        showTimeTaken.textContent = "A sequence needs integers before it can be sorted";
     }
 
-    function sort(ascBool) {
+    function emptySequenceMessage() {
+        document.getElementById("timeTaken").textContent = "A sequence needs integers before it can be sorted";
+    }
+
+    function modifiedSequenceMessage() {
+        document.getElementById("timeTaken").textContent = "Please select Ascending or Descending to sort the sequence";
+    }
+    // Submits POST
+    // Convert data and send via AJAX
+    function save() {
+
+        //######
+        // NEED TO CHECK IF IT'S A VALID LIST
+        //#########
+        const numberButtons = Array.from(document.querySelectorAll('[id="numberButton"'));
+        const sequenceArray = numberButtons.map(button => parseInt(button.textContent));
+
+        // Serialise the data into JSON
+        var data = JSON.stringify({ 
+            Sequence: sequenceArray,
+            IsAscending: sequenceIsAscending,
+            SortingTime: timeTaken
+        });
+
+        fetch("/Sequence/Create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: data
+        })
+        .then(response => {
+            alert("data sent successfully");
+        })
+        .catch(error => {
+            alert("Error: " + error);
+        });
+    }
+
+    // Sorts the order of the numbers in the current sequence
+    function sortBadges(asc) {
+        const numberButtons = document.querySelectorAll('[id="numberButton"');
+        const numberButtonsArray = Array.from(numberButtons);
+
+
+
 
         // Time taken can be erratic, and too small to measure
         // Take average
@@ -114,18 +135,22 @@
         let iterations = 1000;
         for (let i = 0; i < iterations; i++) {
             // Shuffle (as sorted list takes less time to sort)
-            sequence.sort(() => Math.random() - 0.5);
+            numberButtonsArray.sort(() => Math.random() - 0.5);
 
             // Sort and measure time
             let start = performance.now();
-            if (ascBool) {
-                sequence.sort(function (a, b) {
-                    return a - b;
+            if (asc) {
+                numberButtonsArray.sort((numButton1, numButton2) => {
+                    const num1 = parseInt(numButton1.textContent);
+                    const num2 = parseInt(numButton2.textContent);
+                    return num1 - num2;
                 });
             }
             else {
-                sequence.sort(function (a, b) {
-                    return b - a;
+                numberButtonsArray.sort((numButton1, numButton2) => {
+                    const num1 = parseInt(numButton1.textContent);
+                    const num2 = parseInt(numButton2.textContent);
+                    return num2 - num1;
                 });
             }
 
@@ -133,41 +158,15 @@
             totalTime += elapsed;
         }
         let averageTime = totalTime / iterations;
-
-        // Display the sequence - FOR DEV PURPOSES
-        let showSequence = document.getElementById("showSequence");
-        showSequence.textContent = "Sequence: " + sequence.join(", ");
+        timeTaken = averageTime.toFixed(3);
 
         // Display the time taken
         let showTimeTaken = document.getElementById("timeTaken");
-        showTimeTaken.textContent = averageTime.toFixed(3) + " milliseconds";     
-    }
+        showTimeTaken.textContent = timeTaken + " milliseconds";
 
-
-
-
-
-
-    function sortBadges(asc) {
-        const badges = document.querySelectorAll('[id="badge"');
-        const badgesArray = Array.from(badges);
-        if (asc) {
-            badgesArray.sort((badge1, badge2) => {
-                const num1 = parseInt(badge1.textContent);
-                const num2 = parseInt(badge2.textContent);
-                return num1 - num2;
-            });
-        }
-        else{
-            badgesArray.sort((badge1, badge2) => {
-                const num1 = parseInt(badge1.textContent);
-                const num2 = parseInt(badge2.textContent);
-                return num2 - num1;
-            });
-        }
-        const badgeContainer = document.getElementById('badgeContainer');
-        badgeContainer.innerHTML = ''; // Clear existing badges
-        badgesArray.forEach(badge => badgeContainer.appendChild(badge));
+        const numberButtonContainer = document.getElementById('numberButtonContainer');
+        numberButtonContainer.innerHTML = ''; // Clear existing badges
+        numberButtonsArray.forEach(numberButton => numberButtonContainer.appendChild(numberButton));
 
 
     }
@@ -176,39 +175,45 @@
         var number = parseInt(numberInput.value);
 
 
-
+        // MAKE SURE IT'S AN INTEGER #############################
         // Check if input is a valid number
         if (isNaN(number)) {
             alert("Please enter a valid number.");
             return;
         }
         neutraliseSortState();
-        sequence.push(number);
-        let showSequence = document.getElementById("showSequence");
+        // Remove sorting time, and replace with note
+        modifiedSequenceMessage();
+        //sequence.push(number);
+        //let showSequence = document.getElementById("showSequence");
         // Set the text content of the <p> tag to the value of the sequence variable
-        showSequence.textContent = "Sequence: " + sequence.join(", ");
+        //showSequence.textContent = "Sequence: " + sequence.join(", ");
 
         // Create a tile element
-        var numberBadge = document.createElement("div");
-        numberBadge.classList.add("btn", "btn-primary", "bg-primary", "me-2");
-        numberBadge.id = "badge";
-        numberBadge.textContent = number;
-        numberBadge.style.cursor = "pointer";
-        numberBadge.onclick = function () {
-            let number = parseInt(this.textContent.toString())
-            sequence.splice(sequence.indexOf(number), 1);
-            let showSequence = document.getElementById("showSequence");
+        var numberButton = document.createElement("div");
+        numberButton.classList.add("btn", "btn-primary", "bg-primary", "me-2");
+        numberButton.id = "numberButton";
+        numberButton.textContent = number;
+        numberButton.style.cursor = "pointer";
+        numberButton.onclick = function () {
+            //let number = parseInt(this.textContent.toString())
+            //sequence.splice(sequence.indexOf(number), 1);
+            //let showSequence = document.getElementById("showSequence");
             // Set the text content of the <p> tag to the value of the sequence variable
-            showSequence.textContent = "Sequence: " + sequence.join(", ");
-            numberBadge.remove();
-            if (sequence.length == 0) {
+            //showSequence.textContent = "Sequence: " + sequence.join(", ");
+            numberButton.remove();
+            numCount--;
+            if (numCount == 0) {
                 neutraliseSortState();
+                emptySequenceMessage();
             }
         };
 
         // Append the tile to the tile container
-        var tileContainer = document.getElementById("badgeContainer");
-        tileContainer.appendChild(numberBadge);
+        var buttonContainer = document.getElementById("numberButtonContainer");
+        buttonContainer.appendChild(numberButton);
+        listIsSorted = false;
+        numCount++;
 
         // Clear the input field after adding the number
         numberInput.value = "";

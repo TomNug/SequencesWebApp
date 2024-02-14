@@ -11,7 +11,7 @@ namespace SequencesWebApp.Controllers
         public SequenceController(ISequenceRepository sequenceRepository)
         {
             _sequenceRepository = sequenceRepository;
-            
+
         }
         public async Task<IActionResult> Index()
         {
@@ -28,11 +28,6 @@ namespace SequencesWebApp.Controllers
             return View(homeViewModel);
         }
 
-        public JsonResult PostSequence(List<int> sequence, float time, bool ascending)
-        {
-            return new JsonResult(Ok());
-        }
-
         public async Task<IActionResult> Detail(int id)
         {
             Sequence sequence = await _sequenceRepository.GetByIdAsync(id);
@@ -46,11 +41,20 @@ namespace SequencesWebApp.Controllers
             return View(sequenceDetailViewModel);
         }
 
-
+        //[HttpGet]
         public IActionResult Create()
         {
             List<int> integerSequence = new List<int>();
             return View(integerSequence);
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] SequenceCreateViewModel sequenceCreateViewModel)
+        {
+            List<int> ints = sequenceCreateViewModel.Sequence;
+            //bool ascending = sequenceCreateViewModel.IsAscending;
+            //float timeTaken = sequenceCreateViewModel.SortingTime;
+            return Ok();
         }
     }
 }
