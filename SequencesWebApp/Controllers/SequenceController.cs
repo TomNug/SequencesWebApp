@@ -28,6 +28,11 @@ namespace SequencesWebApp.Controllers
             return View(homeViewModel);
         }
 
+        public JsonResult PostSequence(List<int> sequence, float time, bool ascending)
+        {
+            return new JsonResult(Ok());
+        }
+
         public async Task<IActionResult> Detail(int id)
         {
             Sequence sequence = await _sequenceRepository.GetByIdAsync(id);
@@ -39,6 +44,13 @@ namespace SequencesWebApp.Controllers
                 SortingTime = sequence.SortingTime
             };
             return View(sequenceDetailViewModel);
+        }
+
+
+        public IActionResult Create()
+        {
+            List<int> integerSequence = new List<int>();
+            return View(integerSequence);
         }
     }
 }
