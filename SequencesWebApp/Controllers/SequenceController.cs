@@ -45,38 +45,51 @@ namespace SequencesWebApp.Controllers
         //[HttpGet]
         public IActionResult Create()
         {
-            List<int> integerSequence = new List<int>();
-            return View(integerSequence);
+            //List<int> integerSequence = new List<int>();
+            //return View(integerSequence);
+            return View();
         }
+
 
         [HttpPost]
         public IActionResult Create([FromBody] SequenceCreateViewModel sequenceCreateViewModel)
         {
-            List<int> ints = sequenceCreateViewModel.Sequence;
-            bool ascending = sequenceCreateViewModel.IsAscending;
-            float timeTaken = sequenceCreateViewModel.SortingTime;
-
-            List<SequenceInt> integerList = new List<SequenceInt>();
-            foreach(int integer in ints)
+            if (ModelState.IsValid)
             {
-                SequenceInt sequenceInt = new SequenceInt()
+                // CHECK FOR NULLS
+                List<int> ints = sequenceCreateViewModel.Sequence;
+                bool ascending = sequenceCreateViewModel.IsAscending;
+                float timeTaken = sequenceCreateViewModel.SortingTime;
+
+                List<SequenceInt> integerList = new List<SequenceInt>();
+                foreach (int integer in ints)
                 {
-                    Value = integer,
+                    SequenceInt sequenceInt = new SequenceInt()
+                    {
+                        Value = integer,
+                    };
+                    integerList.Add(sequenceInt);
+                }
+
+
+
+                var sequence = new Sequence()
+                {
+                    IsAscending = ascending,
+                    SortingTime = timeTaken,
+                    Integers = integerList
                 };
-                integerList.Add(sequenceInt);
+
+                _sequenceRepository.Add(sequence);
+                //return RedirectToAction("Index");
+                return Ok(new { message = "Sequence saved." });
             }
-
-
-
-            var sequence = new Sequence()
+            else
             {
-                IsAscending = ascending,
-                SortingTime = timeTaken,
-                Integers = integerList
-            };
-
-            _sequenceRepository.Add(sequence);
-            return RedirectToAction("Index");
+                return BadRequest(ModelState);
+            }
+            //return View(sequenceCreateViewModel
+            
         }
     }
 }

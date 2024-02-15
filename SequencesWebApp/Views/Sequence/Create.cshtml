@@ -1,36 +1,44 @@
-﻿@model List<int>
+﻿@* @using SequencesWebApp.ViewModels
+@model SequenceCreateViewModel *@
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
 <h1>Creating the Sequence</h1>
-<form method="post" id="integerForm">
-    <div id="integerInputs" class="mb-2">
-        <input id="integerInput" type="number" />
-        <button type="button" onclick="addInteger()">Add</button>
+<!-- Entering integers -->
+<form id="integerForm">
+    <div class="mb-2">
+        <!-- Regular expression prevents input of non-integers -->
+        <input 
+            id="integerInput" 
+            type="text" 
+            pattern="-?\d*" 
+            oninput="this.value = this.value.replace(/[^\d-]/g,'')"
+            onkeypress="if(event.keyCode === 13) { addIntegerToSequence(); return false; }" />
+        <button type="button" onclick="addIntegerToSequence()">Add</button>
     </div>
     
-    <div id="numberButtonContainer">
-    <!-- Number buttons are added here -->
-</div>
+    <div id="integerButtonContainer">
+        <!-- Number buttons are added here -->
+    </div>
 
-    <h1>Sorting Options</h1>
-    
+    <!-- Sorting Options -->
+    <h1 class="mt-5">Sorting Options</h1>
     <button type="button" class="btn btn-secondary" id="sortAscendingButton">Sort Ascending</button>
     <button type="button" class="btn btn-secondary" id="sortDescendingButton">Sort Descending</button>
     <div>
-        <h2>Sort Time</h2>
-        <p id="timeTaken"></p>
+        <p class="mt-2"><b>Sort Time: </b><span id="timeTaken">A sequence needs integers before it can be sorted.</span></p>
     </div>
-    <h1>Sequence</h1>
-    <p id="showSequence"> </p>
 
-    <button type="button" class="btn btn-secondary" id="saveButton" onclick="save()">Save Sequence</button>
+    <!-- Saving -->
+    <h1 class="mt-5">Save to the Database</h1>
+    <button type="button" class="btn btn-secondary" id="saveButton" onclick="save()">Save</button>
 </form>
 
+<!-- JavaScript -->
 <script>
-    let numCount = 0;
+    let intCount = 0;
     let sequenceIsSorted = false;
     let sequenceIsAscending = true;
     let timeTaken = 0;
@@ -43,10 +51,11 @@
     // Sorts on click - ASCENDING
     sortAscendingButton.addEventListener("click", function() {
         // Sort in ascending order
-        if (numCount > 0) {
+        if (intCount > 0) {
             // Make selected button green
             sortAscendingButton.classList.add("btn-success");
             sortDescendingButton.classList.remove("btn-success");
+            // Set state and perform sort
             sequenceIsSorted = true;
             sequenceIsAscending = true;
             sortBadges(true);
@@ -54,17 +63,17 @@
         else{
             // Reset colours
             neutraliseSortState();
-            
         }
     });
 
     // Sorts on click - DESCENDING
     sortDescendingButton.addEventListener("click", function () {
         // Sort in descending order
-        if (numCount > 0) {
+        if (intCount > 0) {
             // Make selected button green
             sortAscendingButton.classList.remove("btn-success");
             sortDescendingButton.classList.add("btn-success");
+            // Set state and perform sort
             sequenceIsSorted = true;
             sequenceIsAscending = false;
             sortBadges(false);
@@ -75,58 +84,84 @@
         }
     });
 
+    // Resets colours and state to show sequence is unsorted
     function neutraliseSortState() {
 
         // Reset sorting button colours
         sortAscendingButton.classList.remove("btn-success");
         sortDescendingButton.classList.remove("btn-success");
+
+        sequenceIsSorted = false;
     }
 
+    // No time taken - empty sequence
     function emptySequenceMessage() {
         document.getElementById("timeTaken").textContent = "A sequence needs integers before it can be sorted";
     }
 
+    // No time taken - unsorted
     function modifiedSequenceMessage() {
         document.getElementById("timeTaken").textContent = "Please select Ascending or Descending to sort the sequence";
     }
+
     // Submits POST
     // Convert data and send via AJAX
     function save() {
 
-        //######
-        // NEED TO CHECK IF IT'S A VALID LIST
-        //#########
-        const numberButtons = Array.from(document.querySelectorAll('[id="numberButton"'));
-        const sequenceArray = numberButtons.map(button => parseInt(button.textContent));
+        const integerButtons = Array.from(document.querySelectorAll('[id="integerButton"'));
 
-        // Serialise the data into JSON
-        var data = JSON.stringify({ 
-            Sequence: sequenceArray,
-            IsAscending: sequenceIsAscending,
-            SortingTime: timeTaken
-        });
+        // Validate the data
+        if (integerButtons.length == 0) {
+            alert("Sequences must have at least one integer.")
+        }
+        else if (!sequenceIsSorted) {
+            alert("Sequences must be sorted before saving.")
+        }
+        else {
+            const sequenceArray = integerButtons.map(button => parseInt(button.textContent));
 
-        fetch("/Sequence/Create", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: data
-        })
-        .then(response => {
-            alert("data sent successfully");
-        })
-        .catch(error => {
-            alert("Error: " + error);
-        });
+            // Serialise the data into JSON
+            var data = JSON.stringify({
+                Sequence: sequenceArray,
+                IsAscending: sequenceIsAscending,
+                SortingTime: timeTaken
+            });
+
+            $.ajax(
+            {
+                url: '/Sequence/Create',
+                method: 'POST',
+                contentType: 'application/json',
+                data: data,
+                success: function (response) 
+                {
+                    // Success response
+                    alert(response.message);
+                },
+                error: function (xhr, status, error) 
+                {
+                    // Error
+                    if (xhr.status === 400) 
+                    {
+                        // ModelState error
+                        var errors = xhr.responseJSON;
+                        alert("Error: " + JSON.stringify(errors));
+                    } else 
+                    {
+                        // Other error
+                        alert("Error: " + error);
+                    }
+                }
+            });
+        }
     }
 
     // Sorts the order of the numbers in the current sequence
     function sortBadges(asc) {
-        const numberButtons = document.querySelectorAll('[id="numberButton"');
+        const integerButtons = document.querySelectorAll('[id="integerButton"');
         //const numberButtonsArray = Array.from(numberButtons);
         // Array of integers, for more efficient sorting
-        const integerArray = Array.from(numberButtons).map(button => parseInt(button.textContent));
+        const integerArray = Array.from(integerButtons).map(button => parseInt(button.textContent));
 
         // Time taken can vary significantly, and sometimes too small to measure
         // Take average
@@ -160,63 +195,70 @@
         showTimeTaken.textContent = timeTaken + " milliseconds";
 
         // Reform the array into buttons
-        const numberButtonContainer = document.getElementById('numberButtonContainer');
-        numberButtonContainer.innerHTML = ''; // Clear existing badges
-        integerArray.forEach(intValue => addNumberButton(intValue));
+        const integerButtonContainer = document.getElementById('integerButtonContainer');
+        integerButtonContainer.innerHTML = ''; // Clear existing badges
+        integerArray.forEach(intValue => addIntegerButton(intValue));
 
 
     }
-    function addInteger() {
-        var numberInput = document.getElementById("integerInput");
-        var number = parseInt(numberInput.value);
 
+    // Accepts user input of integers
+    // Adds them to the sequence
+    function addIntegerToSequence() {
+        var integerInput = document.getElementById("integerInput");
+        var integer = parseInt(integerInput.value);
 
-        // MAKE SURE IT'S AN INTEGER #############################
         // Check if input is a valid number
-        if (isNaN(number)) {
+        if (isNaN(integer)) {
             alert("Please enter a valid number.");
             return;
         }
-        neutraliseSortState();
-        // Remove sorting time, and replace with note
-        modifiedSequenceMessage();
-        //sequence.push(number);
-        //let showSequence = document.getElementById("showSequence");
-        // Set the text content of the <p> tag to the value of the sequence variable
-        //showSequence.textContent = "Sequence: " + sequence.join(", ");
-        addNumberButton(number);
+        else if (integer > 2147483647) {
+            alert("Integer too large.");
+            return;
+        } else if (integer < -2147483648) {
+            alert("Integer too small.");
+            return;
+        }
 
+        // Sequence may be out of order now
+        // Remove sorting time, and replace with note
+        neutraliseSortState();
+        modifiedSequenceMessage();
         listIsSorted = false;
-        numCount++;
+        
+        // Add number, update state
+        addIntegerButton(integer);
+        intCount++;
 
         // Clear the input field after adding the number
-        numberInput.value = "";
+        integerInput.value = "";
     }
 
-    function addNumberButton(intValue) {
+    // Adds the button representing a number in the sequence
+    function addIntegerButton(intValue) {
         // Create a button element
-        var numberButton = document.createElement("div"); // DIV?
-        numberButton.classList.add("btn", "btn-primary", "bg-primary", "me-2");
-        numberButton.id = "numberButton";
-        numberButton.textContent = intValue;
-        numberButton.style.cursor = "pointer";
-        numberButton.onclick = function () {
-            //let number = parseInt(this.textContent.toString())
-            //sequence.splice(sequence.indexOf(number), 1);
-            //let showSequence = document.getElementById("showSequence");
-            // Set the text content of the <p> tag to the value of the sequence variable
-            //showSequence.textContent = "Sequence: " + sequence.join(", ");
+        var integerButton = document.createElement("button");
+        integerButton.classList.add("btn", "btn-primary", "bg-primary", "me-2");
+        integerButton.id = "integerButton";
+        integerButton.textContent = intValue;
+        integerButton.style.cursor = "pointer";
+        integerButton.onclick = function () 
+        {
+            // Clicking on number removes it
             this.remove();
-            numCount--;
-            if (numCount == 0) {
-                neutraliseSortState();
+            intCount--;
+            neutraliseSortState();
+            if (intCount == 0) {
                 emptySequenceMessage();
+            } else {
+                modifiedSequenceMessage();
             }
         };
 
         // Append the tile to the tile container
-        var buttonContainer = document.getElementById("numberButtonContainer");
-        buttonContainer.appendChild(numberButton);
+        var buttonContainer = document.getElementById("integerButtonContainer");
+        buttonContainer.appendChild(integerButton);
     }
 </script>
 
