@@ -25,19 +25,17 @@
             <tbody>
                 @foreach (var sequence in Model.Sequences)
                 {
-                    <a asp-controller="Sequence" asp-action="Detail" asp-route-id="@sequence.Id">
-                        <tr>
-                            <td>
-                                @string.Join(", ", sequence.Integers.Select(x => x.Value))
-                            </td>
-                            <td>
-                                @(sequence.IsAscending ? "Ascending" : "Descending")
-                            </td>
-                            <td>
-                                @sequence.SortingTime
-                            </td>
-                        </tr>
-                    </a>
+                    <tr onclick="location.href='@Url.Action("Detail", "Sequence", new { id = sequence.Id })'" style="cursor: pointer;">
+                        <td>
+                            @string.Join(", ", sequence.Integers.Select(x => x.Value))
+                        </td>
+                        <td>
+                            @(sequence.IsAscending ? "Ascending" : "Descending")
+                        </td>
+                        <td>
+                            @sequence.SortingTime
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
