@@ -32,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Sequence}/{action=Index}/{id?}");
+    pattern: "{controller=Sequence}/{action=Index}"); 
 
 app.Run();

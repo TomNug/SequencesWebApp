@@ -50,6 +50,33 @@ namespace SequencesWebApp.Controllers
             return View();
         }
 
+        public async Task<IActionResult> JSON(JSONViewModel jSONViewModel)
+        {
+            // Retrieve JSON string from repository
+            string jsonData = await _sequenceRepository.GetAllAsJsonAsync();
+            // Show on page
+            return Content(jsonData, "application/json");
+        }
+
+
+
+        public async Task<IActionResult> DownloadJsonFile()
+        {
+            // Retrieve JSON string from repository
+            var jsonData = await _sequenceRepository.GetAllAsJsonAsync();
+
+
+            string fileName = "sequences.json";
+            string contentType = "application/json";
+
+            // Convert to byte array
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(jsonData);
+
+            // Return file for download
+            return File(data, contentType, fileName);
+        }
+
+
 
         [HttpPost]
         public IActionResult Create([FromBody] SequenceCreateViewModel sequenceCreateViewModel)

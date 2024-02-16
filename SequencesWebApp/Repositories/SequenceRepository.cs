@@ -1,5 +1,6 @@
 ﻿using ListsWebApp.Data;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SequencesWebApp.Interfaces;
 using SequencesWebApp.Models;
 
@@ -22,6 +23,13 @@ namespace SequencesWebApp.Repositories
         public bool Delete(Sequence sequence)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<string> GetAllAsJsonAsync()
+        {
+            var sequences = await _context.Sequences.Include(s => s.Integers).ToListAsync();
+            string jsonData = JsonConvert.SerializeObject(sequences);
+            return jsonData;
         }
 
         public async Task<List<Sequence>> GetAllAsync()
