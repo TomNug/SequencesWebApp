@@ -11,14 +11,14 @@
     <div class="mb-2">
         <!-- Regular expression prevents input of non-integers -->
         <input 
-            id="integerInput" 
-            type="text" 
-            pattern="-?\d*" 
-            oninput="this.value = this.value.replace(/[^\d-]/g,'')"
+            id="integerInput" @* MIN MAND MAX*@
+            type="text"
+            oninput="this.value = this.value.replace(/(?!^)-|[^0-9-]/g, '')"
             onkeypress="if(event.keyCode === 13) { addIntegerToSequence(); return false; }" />
         <button type="button" onclick="addIntegerToSequence()">Add</button>
     </div>
-    
+</form>
+
     <div id="integerButtonContainer">
         <!-- Number buttons are added here -->
     </div>
@@ -34,7 +34,7 @@
     <!-- Saving -->
     <h1 class="mt-5">Save to the Database</h1>
     <button type="button" class="btn btn-secondary" id="saveButton" onclick="save()">Save</button>
-</form>
+
 
 <!-- JavaScript -->
 <script>
