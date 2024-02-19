@@ -5,10 +5,9 @@ namespace SequencesWebApp.ViewModels
 {
     public class SequenceCreateViewModel
     {
-        //public int Id { get; set; }
         [Required]
         [MinLength(1, ErrorMessage = "Sequences should contain at least one integer")]
-        public List<int> Sequence { get; set; }
+        public List<int> Sequence { get; set; } = new List<int>();
         [Required]
         public bool IsAscending { get; set; }
         [Required]
