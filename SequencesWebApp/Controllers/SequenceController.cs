@@ -51,8 +51,6 @@ namespace SequencesWebApp.Controllers
 
         public IActionResult Create()
         {
-            //List<int> integerSequence = new List<int>();
-            //return View(integerSequence);
             return View();
         }
 
@@ -83,18 +81,20 @@ namespace SequencesWebApp.Controllers
         }
 
 
-
+        // JavaScript will call this action from the Create View
         [HttpPost]
         public IActionResult Create([FromBody] SequenceCreateViewModel sequenceCreateViewModel)
         {
             if (ModelState.IsValid)
             {
-                // CHECK FOR NULLS
                 List<int> ints = sequenceCreateViewModel.Sequence;
                 bool ascending = sequenceCreateViewModel.IsAscending;
                 float timeTaken = sequenceCreateViewModel.SortingTime;
 
                 List<SequenceInt> integerList = new List<SequenceInt>();
+                
+                // Create each SequenceInt
+                // (the integers which form the sequence)
                 foreach (int integer in ints)
                 {
                     SequenceInt sequenceInt = new SequenceInt()
@@ -104,8 +104,7 @@ namespace SequencesWebApp.Controllers
                     integerList.Add(sequenceInt);
                 }
 
-
-
+                // Create new Sequence
                 var sequence = new Sequence()
                 {
                     IsAscending = ascending,
@@ -114,15 +113,12 @@ namespace SequencesWebApp.Controllers
                 };
 
                 _sequenceRepository.Add(sequence);
-                //return RedirectToAction("Index");
                 return Ok(new { message = "Sequence saved." });
             }
             else
             {
                 return BadRequest(ModelState);
             }
-			//return View(sequenceCreateViewModel
-			return RedirectToAction(nameof(Index));
 		}
 
 
@@ -131,7 +127,8 @@ namespace SequencesWebApp.Controllers
             var sequenceDetails = await _sequenceRepository.GetByIdAsync(Id);
             if (sequenceDetails == null)
             {
-                return View("Error"); // NULL ERROR - NOT BEING HANDLED
+                // Entity does not exist
+                return NotFound(); 
             }
             return View(sequenceDetails);
         }
@@ -143,6 +140,7 @@ namespace SequencesWebApp.Controllers
             var sequenceDetails = await _sequenceRepository.GetByIdAsync(Id);
             if (sequenceDetails == null)
             {
+                // Sequence does not exist
                 return NotFound();
             }
 
