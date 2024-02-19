@@ -54,6 +54,47 @@ namespace SequencesWebApp.Controllers
             return View();
         }
 
+        // JavaScript will call this action from the Create View
+        [HttpPost]
+        public IActionResult Create([FromBody] SequenceCreateViewModel sequenceCreateViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                List<int> ints = sequenceCreateViewModel.Sequence;
+                bool ascending = sequenceCreateViewModel.IsAscending;
+                float timeTaken = sequenceCreateViewModel.SortingTime;
+
+                List<SequenceInt> integerList = new List<SequenceInt>();
+
+                // Create each SequenceInt
+                // (the integers which form the sequence)
+                foreach (int integer in ints)
+                {
+                    SequenceInt sequenceInt = new SequenceInt()
+                    {
+                        Value = integer,
+                    };
+                    integerList.Add(sequenceInt);
+                }
+
+                // Create new Sequence
+                var sequence = new Sequence()
+                {
+                    IsAscending = ascending,
+                    SortingTime = timeTaken,
+                    Integers = integerList
+                };
+
+                _sequenceRepository.Add(sequence);
+                TempData["SaveSuccessMessage"] = "Sequence saved successfully.";
+                return Ok(new { message = "Sequence saved." });
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
         public async Task<IActionResult> JSON(JSONViewModel jSONViewModel)
         {
             // Retrieve JSON string from repository
@@ -81,45 +122,7 @@ namespace SequencesWebApp.Controllers
         }
 
 
-        // JavaScript will call this action from the Create View
-        [HttpPost]
-        public IActionResult Create([FromBody] SequenceCreateViewModel sequenceCreateViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                List<int> ints = sequenceCreateViewModel.Sequence;
-                bool ascending = sequenceCreateViewModel.IsAscending;
-                float timeTaken = sequenceCreateViewModel.SortingTime;
-
-                List<SequenceInt> integerList = new List<SequenceInt>();
-                
-                // Create each SequenceInt
-                // (the integers which form the sequence)
-                foreach (int integer in ints)
-                {
-                    SequenceInt sequenceInt = new SequenceInt()
-                    {
-                        Value = integer,
-                    };
-                    integerList.Add(sequenceInt);
-                }
-
-                // Create new Sequence
-                var sequence = new Sequence()
-                {
-                    IsAscending = ascending,
-                    SortingTime = timeTaken,
-                    Integers = integerList
-                };
-
-                _sequenceRepository.Add(sequence);
-                return Ok(new { message = "Sequence saved." });
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-		}
+        
 
 
         public async Task<IActionResult> Delete(int Id)
@@ -145,7 +148,7 @@ namespace SequencesWebApp.Controllers
             }
 
             _sequenceRepository.Delete(sequenceDetails);
-
+            TempData["DeleteSuccessMessage"] = "Sequence deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
     }
