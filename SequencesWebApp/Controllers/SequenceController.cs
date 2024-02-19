@@ -2,6 +2,7 @@
 using SequencesWebApp.Interfaces;
 using SequencesWebApp.Models;
 using SequencesWebApp.ViewModels;
+using System.Diagnostics;
 using System.Net;
 
 namespace SequencesWebApp.Controllers
@@ -33,7 +34,12 @@ namespace SequencesWebApp.Controllers
 
             if (sequence == null)
             {
-                return NotFound();
+                var errorViewModel = new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                    ErrorMessage = "Sequence not found."
+                };
+                return View("Error", errorViewModel);
             }
             else
             {
@@ -131,7 +137,12 @@ namespace SequencesWebApp.Controllers
             if (sequenceDetails == null)
             {
                 // Entity does not exist
-                return NotFound(); 
+                var errorViewModel = new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                    ErrorMessage = "Unable to delete. Sequence not found."
+                };
+                return View("Error", errorViewModel);
             }
             return View(sequenceDetails);
         }
@@ -144,7 +155,12 @@ namespace SequencesWebApp.Controllers
             if (sequenceDetails == null)
             {
                 // Sequence does not exist
-                return NotFound();
+                var errorViewModel = new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                    ErrorMessage = "Unable to delete. Sequence not found."
+                };
+                return View("Error", errorViewModel);
             }
 
             _sequenceRepository.Delete(sequenceDetails);
