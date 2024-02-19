@@ -45,9 +45,11 @@
     let sequenceIsAscending = true;
     let timeTaken = 0;
 
-    // Identify the sorting buttons
+    // Identify the buttons
     const sortAscendingButton = document.getElementById("sortAscendingButton");
     const sortDescendingButton = document.getElementById("sortDescendingButton");
+    const saveButton = document.getElementById("saveButton");
+    
     neutraliseSortState();
 
     // Sorts on click - ASCENDING
@@ -56,6 +58,7 @@
         if (intCount > 0) {
             // Make selected button green
             sortAscendingButton.classList.add("btn-success");
+            saveButton.classList.add("btn-success");
             sortDescendingButton.classList.remove("btn-success");
             // Set state and perform sort
             sequenceIsSorted = true;
@@ -74,6 +77,7 @@
         if (intCount > 0) {
             // Make selected button green
             sortAscendingButton.classList.remove("btn-success");
+            saveButton.classList.add("btn-success");
             sortDescendingButton.classList.add("btn-success");
             // Set state and perform sort
             sequenceIsSorted = true;
@@ -92,6 +96,7 @@
         // Reset sorting button colours
         sortAscendingButton.classList.remove("btn-success");
         sortDescendingButton.classList.remove("btn-success");
+        saveButton.classList.remove("btn-success");
 
         sequenceIsSorted = false;
     }
