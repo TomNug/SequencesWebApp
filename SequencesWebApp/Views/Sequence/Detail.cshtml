@@ -7,12 +7,23 @@
 @{
 }
 
-<h1>Detail Page</h1>
+@if (Model == null)
+{
+    <div>
+        <p>Sequence was not found.</p>
+    </div>
+}
+else
+{
+    <h1>Detail Page</h1>
 
-<p><b>Integers: </b>@string.Join(", ", @Model.Integers.Select(x => x.Value))</p>
+    <p><b>Integers: </b>@string.Join(", ", @Model.Integers.Select(x => x.Value))</p>
 
-<p><b>Order: </b>@(@Model.IsAscending ? "Ascending" : "Descending")</p>
+    <p><b>Order: </b>@(@Model.IsAscending ? "Ascending" : "Descending")</p>
 
-<p><b>Sorting Time: </b>@Model.SortingTime</p>
+    <p><b>Sorting Time: </b>@Model.SortingTime</p>
 
-<button>Delete</button>
+    <a asp-controller="Sequence" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
+}
+
+

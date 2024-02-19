@@ -1,0 +1,16 @@
+﻿@model Sequence
+
+<h1>Are you sure you wish to delete this sequence?</h1>
+
+<p><b>Integers: </b>@string.Join(", ", @Model.Integers.Select(x => x.Value))</p>
+
+<p><b>Order: </b>@(@Model.IsAscending ? "Ascending" : "Descending")</p>
+
+<p><b>Sorting Time: </b>@Model.SortingTime</p>
+<form asp-controller="Sequence" asp-action="Delete" method="post" asp-route-id="@Model.Id">
+	<button class="btn btn-primary">Delete</button>
+</form>
+
+
+
+

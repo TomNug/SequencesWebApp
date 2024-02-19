@@ -22,7 +22,8 @@ namespace SequencesWebApp.Repositories
 
         public bool Delete(Sequence sequence)
         {
-            throw new NotImplementedException();
+            _context.Remove(sequence);
+            return Save();
         }
 
         public async Task<string> GetAllAsJsonAsync()
@@ -37,7 +38,7 @@ namespace SequencesWebApp.Repositories
             return await _context.Sequences.Include(s => s.Integers).ToListAsync();
         }
 
-        public async Task<Sequence> GetByIdAsync(int id)
+        public async Task<Sequence?> GetByIdAsync(int id)
         {
             return await _context.Sequences.Include(s => s.Integers).SingleOrDefaultAsync(s => s.Id == id);
         }

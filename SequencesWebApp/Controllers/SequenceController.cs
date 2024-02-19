@@ -16,11 +16,9 @@ namespace SequencesWebApp.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            // Check if null
+            // Either populated, or empty list
             var sequences = await _sequenceRepository.GetAllAsync();
 
-
-            // Could sequences be null
             HomeViewModel homeViewModel = new HomeViewModel()
             {
                 Sequences = sequences
@@ -31,18 +29,26 @@ namespace SequencesWebApp.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-            Sequence sequence = await _sequenceRepository.GetByIdAsync(id);
-            SequenceDetailViewModel sequenceDetailViewModel = new SequenceDetailViewModel()
+            Sequence? sequence = await _sequenceRepository.GetByIdAsync(id);
+
+            if (sequence == null)
             {
-                Id = id,
-                Integers = sequence.Integers.ToList(),
-                IsAscending = sequence.IsAscending,
-                SortingTime = sequence.SortingTime
-            };
-            return View(sequenceDetailViewModel);
+                return NotFound();
+            }
+            else
+            {
+                var sequenceDetailViewModel = new SequenceDetailViewModel()
+                {
+                    Id = id,
+                    Integers = sequence.Integers.ToList(),
+                    IsAscending = sequence.IsAscending,
+                    SortingTime = sequence.SortingTime
+                };
+                return View(sequenceDetailViewModel);
+            }
+            
         }
 
-        //[HttpGet]
         public IActionResult Create()
         {
             //List<int> integerSequence = new List<int>();
@@ -115,8 +121,34 @@ namespace SequencesWebApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-            //return View(sequenceCreateViewModel
-            
+			//return View(sequenceCreateViewModel
+			return RedirectToAction(nameof(Index));
+		}
+
+
+        public async Task<IActionResult> Delete(int Id)
+        {
+            var sequenceDetails = await _sequenceRepository.GetByIdAsync(Id);
+            if (sequenceDetails == null)
+            {
+                return View("Error"); // NULL ERROR - NOT BEING HANDLED
+            }
+            return View(sequenceDetails);
+        }
+
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int Id)
+        {
+            var sequenceDetails = await _sequenceRepository.GetByIdAsync(Id);
+            if (sequenceDetails == null)
+            {
+                return NotFound();
+            }
+
+            _sequenceRepository.Delete(sequenceDetails);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
