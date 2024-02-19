@@ -1,20 +1,22 @@
-﻿@* @using SequencesWebApp.ViewModels
-@model SequenceCreateViewModel *@
-@*
+﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
 <h1>Creating the Sequence</h1>
+
 <!-- Entering integers -->
 <form id="integerForm">
     <div class="mb-2">
-        <!-- Regular expression prevents input of non-integers -->
+        
         <input 
-            id="integerInput" @* MIN MAND MAX*@
+            id="integerInput"
             type="text"
-            oninput="this.value = this.value.replace(/(?!^)-|[^0-9-]/g, '')"
+            oninput="this.value = this.value.replace(/(?!^)-|[^0-9-]/g, '')" 
             onkeypress="if(event.keyCode === 13) { addIntegerToSequence(); return false; }" />
+        <!-- Regex prevents input of non-integers -->
+        <!-- Can use Enter to add-->
+
         <button type="button" onclick="addIntegerToSequence()">Add</button>
     </div>
 </form>
@@ -159,7 +161,7 @@
     // Sorts the order of the numbers in the current sequence
     function sortBadges(asc) {
         const integerButtons = document.querySelectorAll('[id="integerButton"');
-        //const numberButtonsArray = Array.from(numberButtons);
+
         // Array of integers, for more efficient sorting
         const integerArray = Array.from(integerButtons).map(button => parseInt(button.textContent));
 
@@ -197,7 +199,7 @@
         // Reform the array into buttons
         const integerButtonContainer = document.getElementById('integerButtonContainer');
         integerButtonContainer.innerHTML = ''; // Clear existing badges
-        integerArray.forEach(intValue => addIntegerButton(intValue));
+        integerArray.forEach(intValue => addIntegerButton(intValue)); // Add new ones in order
 
 
     }

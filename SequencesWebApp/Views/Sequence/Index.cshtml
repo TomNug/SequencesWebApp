@@ -21,7 +21,7 @@
 <div class="text-center">
     <h1 class="display-4">Sequences</h1>
 
-    @if (Model.Sequences == null)
+    @if (Model.Sequences == null || Model.Sequences.Count == 0)
     {
         <p>No existing sequences</p>
     }

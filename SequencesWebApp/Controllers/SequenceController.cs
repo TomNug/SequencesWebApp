@@ -101,7 +101,7 @@ namespace SequencesWebApp.Controllers
             }
         }
 
-        public async Task<IActionResult> JSON(JSONViewModel jSONViewModel)
+        public async Task<IActionResult> JSON()
         {
             // Retrieve JSON string from repository
             string jsonData = await _sequenceRepository.GetAllAsJsonAsync();
