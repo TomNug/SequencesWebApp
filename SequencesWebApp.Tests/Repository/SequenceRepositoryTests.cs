@@ -71,7 +71,7 @@ namespace SequencesWebApp.Tests.Repository
         }
 
         [Fact]
-        public async void SequenceRepository_Add_ReturnsBool()
+        public void SequenceRepository_Add_ReturnsBool()
         {
             // Arrange
             var integers = new List<SequenceInt>();

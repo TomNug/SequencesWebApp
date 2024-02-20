@@ -26,11 +26,10 @@ namespace SequencesWebApp.Tests.Controller
             _sequenceRepository = A.Fake<ISequenceRepository>();
 
             // SUT
-
             var tempData = new TempDataDictionary(new DefaultHttpContext(), A.Fake<ITempDataProvider>());
             _sequenceController = new SequenceController(_sequenceRepository)
             {
-                TempData = tempData // Set the TempData property of the controller to the initialized TempDataDictionary
+                TempData = tempData // Initialise the TempData property
             };
         }
 
@@ -117,9 +116,7 @@ namespace SequencesWebApp.Tests.Controller
         public void SequenceController_Create_POST_ReturnsBadRequest()
         {
             // Arrange
-            var viewModel = new SequenceCreateViewModel
-            {
-            };
+            var viewModel = new SequenceCreateViewModel();
 
             // Act
             var result = _sequenceController.Create(viewModel);
@@ -228,22 +225,5 @@ namespace SequencesWebApp.Tests.Controller
             tempData.ContainsKey(key).Should().BeTrue();
             tempData[key].Should().Be(expectedMessage);
         }
-
-
-
-
-
-
-
-
-
-
-
-        // CREATE AJAX
-
-        // TEST CONTEXT? Need HTTPSOMETHING FOR ERRORS
-
-        // Consistent braces
-
     }
 }
