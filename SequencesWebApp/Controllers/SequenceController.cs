@@ -64,7 +64,7 @@ namespace SequencesWebApp.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] SequenceCreateViewModel sequenceCreateViewModel)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && sequenceCreateViewModel.Sequence.Count > 0)
             {
                 List<int> ints = sequenceCreateViewModel.Sequence;
                 bool ascending = sequenceCreateViewModel.IsAscending;
@@ -93,10 +93,12 @@ namespace SequencesWebApp.Controllers
 
                 _sequenceRepository.Add(sequence);
                 TempData["SaveSuccessMessage"] = "Sequence saved successfully.";
-                return Ok(new { message = "Sequence saved." });
+                //return Ok(new { message = "Sequence saved." });
+                return Ok();
             }
             else
             {
+                // Invalid model state or empty Sequence
                 return BadRequest(ModelState);
             }
         }

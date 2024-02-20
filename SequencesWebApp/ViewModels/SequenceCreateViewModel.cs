@@ -1,4 +1,5 @@
 ﻿using SequencesWebApp.Models;
+using SequencesWebApp.Models.Validators;
 using System.ComponentModel.DataAnnotations;
 
 namespace SequencesWebApp.ViewModels
@@ -6,7 +7,7 @@ namespace SequencesWebApp.ViewModels
     public class SequenceCreateViewModel
     {
         [Required]
-        [MinLength(1, ErrorMessage = "Sequences should contain at least one integer")]
+        [AtLeastOneIntegerElement]
         public List<int> Sequence { get; set; } = new List<int>();
         [Required]
         public bool IsAscending { get; set; }
