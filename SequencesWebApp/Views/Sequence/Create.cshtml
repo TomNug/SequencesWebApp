@@ -148,13 +148,11 @@
                 error: function (xhr, status, error) 
                 {
                     // Error
-                    if (xhr.status === 400) 
-                    {
+                    if (xhr.status === 400) {
                         // ModelState error
                         var errors = xhr.responseJSON;
                         alert("Error: " + JSON.stringify(errors));
-                    } else 
-                    {
+                    } else {
                         // Other error
                         alert("Error: " + error);
                     }
