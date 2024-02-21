@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SequencesWebApp.Models;
 
-namespace ListsWebApp.Data
+namespace SequencesWebApp.Data
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,5 +1,5 @@
-using ListsWebApp.Data;
 using Microsoft.EntityFrameworkCore;
+using SequencesWebApp.Data;
 using SequencesWebApp.Interfaces;
 using SequencesWebApp.Repositories;
 
